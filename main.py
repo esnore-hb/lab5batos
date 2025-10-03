@@ -51,11 +51,9 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         biography_name = row[8].strip().strip('"')
 
         # forma: No alter egos found., nombre
-        alterego = "No alter egos found."
-        if alterego == "No alter egos found.": alterego = []
-        elif row[9] != alterego: alterego = [m.strip().strip('"') for m in re.split('[,;]', row[9])]
-        else: alterego = []
+        alterego = [m.strip().strip('"') for m in re.split('[,;]',row[9])]
         alterego = list(filter(lambda x: len(x) > 0, alterego))
+        if alterego == ["No alter egos found."]: alterego = []
 
         height = (row[17].strip()).split(sep = "'")
         if len(height) == 2:
