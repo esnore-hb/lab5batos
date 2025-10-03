@@ -122,36 +122,9 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
                 work_name_id = cur.fetchone()[0]
 
     # Ejecutamos las solicitudes
-    cur.execute("SELECT * FROM "+SUPERHERO+" LIMIT 10")
-    row = cur.fetchone()
-    while row:
-        print(row)
-        row = cur.fetchone()
-    print("--- nueva tabla ---")
-
-    cur.execute("SELECT * FROM "+CHARACTER+" LIMIT 10")
-    row = cur.fetchone()
-    while row:
-        print(row)
-        row = cur.fetchone()
-
-    print("--- nueva tabla ---")
-
-    cur.execute("SELECT * FROM "+ALTEREGO+" LIMIT 10")
-    row = cur.fetchone()
-    while row:
-        print(row)
-        row = cur.fetchone()
-
-    print("--- nueva tabla ---")
-
-    cur.execute("SELECT * FROM "+WORKOCUPATION+" LIMIT 10")
-    row = cur.fetchone()
-    while row:
-        print(row)
-        row = cur.fetchone()
     
-    # P3 1)
+    # P3 a)
+    print("P3 a)")
     cur.execute("SELECT name, weight FROM "+SUPERHERO+" ORDER BY weight DESC LIMIT 10")
     row = cur.fetchone()
     while row:
@@ -159,6 +132,7 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         row = cur.fetchone()
 
     # P3 2)
+    print("P3 b)")
     cur.execute(f"SELECT name, biography_name, height FROM {SUPERHERO},{CHARACTER} WHERE {SUPERHERO}.id = {CHARACTER}.superhero_id ORDER BY height DESC LIMIT 10")
     row = cur.fetchone()
     while row:
@@ -166,11 +140,17 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         row = cur.fetchone()
 
     # P3 3)
-    cur.execute(f"SELECT {WORKOCUPATION}.work_name, COUNT({WORKOCUPATION}.work_name) \
+    print("P3 c)")
+    cur.execute(f"SELECT {WORKOCUPATION}.work_name, COUNT({WORKOCUPATION}.work_name) AS conteo \
                 FROM {SUPERHERO}, {WORKOCUPATION} \
                 WHERE {SUPERHERO}.id = {WORKOCUPATION}.superhero_id \
                 GROUP BY {WORKOCUPATION}.work_name \
-                ")
+                ORDER BY conteo DESC \
+                LIMIT 3")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
 
 conn.commit()
 conn.close()
