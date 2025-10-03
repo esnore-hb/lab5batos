@@ -147,6 +147,27 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
     while row:
         print(row)
         row = cur.fetchone()
+    
+    # P3 1)
+    cur.execute("SELECT name, weight FROM "+SUPERHERO+" ORDER BY weight DESC LIMIT 10")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
+
+    # P3 2)
+    cur.execute(f"SELECT name, biography_name, height FROM {SUPERHERO},{CHARACTER} WHERE {SUPERHERO}.id = {CHARACTER}.superhero_id ORDER BY height DESC LIMIT 10")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
+
+    # P3 3)
+    cur.execute(f"SELECT {WORKOCUPATION}.work_name, COUNT({WORKOCUPATION}.work_name) \
+                FROM {SUPERHERO}, {WORKOCUPATION} \
+                WHERE {SUPERHERO}.id = {WORKOCUPATION}.superhero_id \
+                GROUP BY {WORKOCUPATION}.work_name \
+                ")
 
 conn.commit()
 conn.close()
