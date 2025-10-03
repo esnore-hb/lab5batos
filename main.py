@@ -3,6 +3,8 @@ import psycopg2.extras
 import csv
 import re
 
+# hola soy la bea
+
 """
 Integrantes:
 - Beatriz Toledo
