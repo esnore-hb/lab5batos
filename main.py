@@ -92,8 +92,9 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         if(r):
             biography_name_id = r[0]
         else:
-            cur.execute("INSERT INTO "+CHARACTER+" (superhero_id, biography_name) VALUES (%s, %s) RETURNING ID", [name_id, biography_name])
-            biography_name_id = cur.fetchone()[0]
+            if biography_name != '':
+                cur.execute("INSERT INTO "+CHARACTER+" (superhero_id, biography_name) VALUES (%s, %s) RETURNING ID", [name_id, biography_name])
+                biography_name_id = cur.fetchone()[0]
 
         # Agregamos sus alteregos con el id del superheroe
         for alterego_name in alterego:
