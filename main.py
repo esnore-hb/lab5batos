@@ -109,18 +109,41 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
                 alterego_name_id = cur.fetchone()[0]
         
         # Agregamos su workocupation
-        for alterego_name in alterego:
-            cur.execute("SELECT id FROM "+ALTEREGO+" WHERE alterego_name = %s LIMIT 1", [alterego_name])
+        for work in work_ocupation:
+            cur.execute("SELECT id FROM "+WORKOCUPATION+" WHERE work_name = %s LIMIT 1", [work])
             r = cur.fetchone()
-            alterego_name_id = None
+            work_name_id = None
             if(r):
-                alterego_name_id = r[0]
+                work_name_id = r[0]
             else:
-                cur.execute("INSERT INTO "+ALTEREGO+" (superhero_id, alterego_name) VALUES (%s, %s) RETURNING ID", [name_id, alterego_name])
-                alterego_name_id = cur.fetchone()[0]
+                cur.execute("INSERT INTO "+WORKOCUPATION+" (superhero_id, work_name) VALUES (%s, %s) RETURNING ID", [name_id, work])
+                work_name_id = cur.fetchone()[0]
 
     # Ejecutamos las solicitudes
     cur.execute("SELECT * FROM "+SUPERHERO+" LIMIT 10")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
+    print("--- nueva tabla ---")
+
+    cur.execute("SELECT * FROM "+CHARACTER+" LIMIT 10")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
+
+    print("--- nueva tabla ---")
+
+    cur.execute("SELECT * FROM "+ALTEREGO+" LIMIT 10")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
+
+    print("--- nueva tabla ---")
+
+    cur.execute("SELECT * FROM "+WORKOCUPATION+" LIMIT 10")
     row = cur.fetchone()
     while row:
         print(row)
