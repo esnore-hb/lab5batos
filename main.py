@@ -85,7 +85,6 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
             cur.execute("INSERT INTO "+SUPERHERO+" (name, height, weight) VALUES (%s, %s, %s) RETURNING ID", [name, height, weight])
             name_id = cur.fetchone()[0]
         
-        """
         # Agregamos su nombre real con el id del superheroe
         cur.execute("SELECT id FROM "+CHARACTER+" WHERE biography_name = %s LIMIT 1", [biography_name])
         r = cur.fetchone()
@@ -106,9 +105,19 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
             else:
                 cur.execute("INSERT INTO "+ALTEREGO+" (superhero_id, alterego_name) VALUES (%s, %s) RETURNING ID", [name_id, alterego_name])
                 alterego_name_id = cur.fetchone()[0]
-            """
+        
+        # Agregamos su workocupation
+        for alterego_name in alterego:
+            cur.execute("SELECT id FROM "+ALTEREGO+" WHERE alterego_name = %s LIMIT 1", [alterego_name])
+            r = cur.fetchone()
+            alterego_name_id = None
+            if(r):
+                alterego_name_id = r[0]
+            else:
+                cur.execute("INSERT INTO "+ALTEREGO+" (superhero_id, alterego_name) VALUES (%s, %s) RETURNING ID", [name_id, alterego_name])
+                alterego_name_id = cur.fetchone()[0]
 
-    #veamos los resultados
+    # Ejecutamos las solicitudes
     cur.execute("SELECT * FROM "+SUPERHERO+" LIMIT 10")
     row = cur.fetchone()
     while row:
