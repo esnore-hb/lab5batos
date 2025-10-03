@@ -19,14 +19,16 @@ CREATE TABLE superheroes.tindanime_character(
 CREATE TABLE superheroes.tindanime_alterego(
     id SERIAL,
     superhero_id SERIAL,
+    alterego_name VARCHAR(255),
     name VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (superhero_id) REFERENCES superheroes.tindanime_superhero(id)
 );
 
-CREATE TABLE superheroes.tindanime_workOcupation(
+CREATE TABLE superheroes.tindanime_workocupation(
     id SERIAL,
     superhero_id SERIAL,
+    work_name VARCHAR(255),
     name VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (superhero_id) REFERENCES superheroes.tindanime_superhero(id)

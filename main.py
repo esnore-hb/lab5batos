@@ -10,6 +10,12 @@ Integrantes:
 - Lazaro Narvaez
 """
 
+# alias de tablas
+SUPERHERO = "superheroes.tindanime_superhero"
+CHARACTER = "superheroes.tindanime_character"
+ALTEREGO = "superheroes.tindanime_alterego"
+WORKOCUPATION = "superheroes.tindanime_workocupation"
+
 # Modifique este metodo para adaptarlo a su lógica.
 def findOrInsert(table, name):
     cur.execute("select id from "+table+" where name=%s limit 1", [name])
@@ -21,11 +27,7 @@ def findOrInsert(table, name):
         return cur.fetchone()[0]
 
 # Establecer conexion con la base de datos
-conn = psycopg2.connect(host = "cc3201.dcc.uchile.cl",
-                        database = "cc3201",
-                        user = "cc3201",
-                        password = "j'<3_cc3201",port = "5440")
-
+conn = psycopg2.connect(host = "cc3201.dcc.uchile.cl", database = "cc3201", user = "cc3201", password = "j'<3_cc3201",port = "5440")
 cur = conn.cursor()
 
 # vaciar tablas
@@ -73,7 +75,45 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
     # Agregar cada elemento a las tablas
     #    print(f"name: {name}", f"biography: {biography_name}", f"alterego {alterego}", f"height: {height}", f"weight:{weight}", f"work: {work_ocupation}", sep='\n',end='\n------\n')
 
+        # Agregamos al heroe en si
+        cur.execute("SELECT id FROM "+SUPERHERO+" WHERE name = %s LIMIT 1", [name]) # como si fuera printf de pss
+        r = cur.fetchone()
+        name_id = None
+        if(r):
+            name_id = r[0]
+        else:
+            cur.execute("INSERT INTO "+SUPERHERO+" (name, height, weight) VALUES (%s, %s, %s) RETURNING ID", [name, height, weight])
+            name_id = cur.fetchone()[0]
+        
+        """
+        # Agregamos su nombre real con el id del superheroe
+        cur.execute("SELECT id FROM "+CHARACTER+" WHERE biography_name = %s LIMIT 1", [biography_name])
+        r = cur.fetchone()
+        biography_name_id = None
+        if(r):
+            biography_name_id = r[0]
+        else:
+            cur.execute("INSERT INTO "+CHARACTER+" (superhero_id, biography_name) VALUES (%s, %s) RETURNING ID", [name_id, biography_name])
+            biography_name_id = cur.fetchone()[0]
 
+        # Agregamos sus alteregos con el id del superheroe
+        for alterego_name in alterego:
+            cur.execute("SELECT id FROM "+ALTEREGO+" WHERE alterego_name = %s LIMIT 1", [alterego_name])
+            r = cur.fetchone()
+            alterego_name_id = None
+            if(r):
+                alterego_name_id = r[0]
+            else:
+                cur.execute("INSERT INTO "+ALTEREGO+" (superhero_id, alterego_name) VALUES (%s, %s) RETURNING ID", [name_id, alterego_name])
+                alterego_name_id = cur.fetchone()[0]
+            """
+
+    #veamos los resultados
+    cur.execute("SELECT * FROM "+SUPERHERO+" LIMIT 10")
+    row = cur.fetchone()
+    while row:
+        print(row)
+        row = cur.fetchone()
 
 conn.commit()
 conn.close()
