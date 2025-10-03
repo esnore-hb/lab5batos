@@ -61,11 +61,14 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         elif len(height) > 1:
             height = int(height[0])
         else: height = 0
-
-        weight = "- lb" # forma: 123 lb, - lb
-        if row[19] == weight: weight = 0
-        elif row[19] != weight:
-            weight = int(row[19].strip().split()[0])
+        
+        weight = row[20].split(" ")
+        if len(weight) == 2 and weight[1]=='tons':
+            weight = int("".join(weight[0].split(','))) * 1000
+        elif len(weight) == 2 and weight[0]!='tons':
+            weight = int(weight[0])
+        else:
+            weight = None
 
         work_ocupation = "-" # forma: separado por ,; y algunos con (former, actual)
         if row[23] == work_ocupation: work_ocupation = []
