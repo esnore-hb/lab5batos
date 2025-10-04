@@ -3,8 +3,6 @@ import psycopg2.extras
 import csv
 import re
 
-# hola soy la bea
-
 """
 Integrantes:
 - Beatriz Toledo
@@ -55,13 +53,17 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         alterego = list(filter(lambda x: len(x) > 0, alterego))
         if alterego == ["No alter egos found."]: alterego = []
 
-        height = (row[17].strip()).split(sep = "'")
+        # parseo de height
+        height = row[18]
+        height = height.strip().strip('"').split()
         if len(height) == 2:
-            height = float(".".join(height))
-        elif len(height) > 1:
-            height = int(height[0])
-        else: height = 0
-        
+            if height[1] == "meters":
+                height = float("".join(height[0].split('.'))) * 100
+            else:
+                height = float(height[0])
+        else:
+            height = 0
+            
         weight = row[20].split(" ")
         if len(weight) == 2 and weight[1]=='tons':
             weight = int("".join(weight[0].split(','))) * 1000
@@ -73,7 +75,7 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
         work_ocupation = "-" # forma: separado por ,; y algunos con (former, actual)
         if row[23] == work_ocupation: work_ocupation = []
         elif row[23] != work_ocupation:
-            work_ocupation = [m.strip().strip('"') for m in re.split('[,;]', row[23])]
+            work_ocupation = [m.strip().strip('"').lower() for m in re.split('[,;]', row[23])]
 
     # Agregar cada elemento a las tablas
     #    print(f"name: {name}", f"biography: {biography_name}", f"alterego {alterego}", f"height: {height}", f"weight:{weight}", f"work: {work_ocupation}", sep='\n',end='\n------\n')
@@ -141,9 +143,9 @@ with open("Laboratorio_5_superheroes_data.csv") as csvfile:
 
     # P3 3)
     print("P3 c)")
-    cur.execute(f"SELECT {WORKOCUPATION}.work_name, COUNT({WORKOCUPATION}.work_name) AS conteo \
-                FROM {SUPERHERO}, {WORKOCUPATION} \
-                WHERE {SUPERHERO}.id = {WORKOCUPATION}.superhero_id \
+    cur.execute(f"SELECT {WORKOCUPATION}.work_name, COUNT(*) AS conteo \
+                FROM {SUPERHERO} JOIN {WORKOCUPATION} \
+                ON {SUPERHERO}.id = {WORKOCUPATION}.superhero_id \
                 GROUP BY {WORKOCUPATION}.work_name \
                 ORDER BY conteo DESC \
                 LIMIT 3")
